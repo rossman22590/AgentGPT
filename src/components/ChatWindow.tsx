@@ -3,11 +3,13 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   FaBrain,
   FaClipboard,
+  FaCopy,
+  FaDatabase,
+  FaImage,
   FaListAlt,
   FaPlayCircle,
+  FaSave,
   FaStar,
-  FaCopy,
-  FaImage,
 } from "react-icons/fa";
 import PopIn from "./motions/popin";
 import Expand from "./motions/expand";
@@ -21,12 +23,16 @@ import { useRouter } from "next/router";
 import WindowButton from "./WindowButton";
 import PDFButton from "./pdf/PDFButton";
 import FadeIn from "./motions/FadeIn";
+import Menu from "./Menu";
+import type { Message } from "../types/agentTypes";
+import clsx from "clsx";
 
 interface ChatWindowProps extends HeaderProps {
   children?: ReactNode;
   className?: string;
-  messages: Message[];
   showDonation: boolean;
+  fullscreen?: boolean;
+  scrollToBottom?: boolean;
 }
 
 const messageListId = "chat-window-message-list";
@@ -37,6 +43,9 @@ const ChatWindow = ({
   className,
   title,
   showDonation,
+  onSave,
+  fullscreen,
+  scrollToBottom,
 }: ChatWindowProps) => {
   const [hasUserScrolled, setHasUserScrolled] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -45,16 +54,13 @@ const ChatWindow = ({
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
 
     // Use has scrolled if we have scrolled up at all from the bottom
-    if (scrollTop < scrollHeight - clientHeight - 10) {
-      setHasUserScrolled(true);
-    } else {
-      setHasUserScrolled(false);
-    }
+    const hasUserScrolled = scrollTop < scrollHeight - clientHeight - 10;
+    setHasUserScrolled(hasUserScrolled);
   };
 
   useEffect(() => {
     // Scroll to bottom on re-renders
-    if (scrollRef && scrollRef.current) {
+    if (scrollToBottom && scrollRef && scrollRef.current) {
       if (!hasUserScrolled) {
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
       }
@@ -68,9 +74,13 @@ const ChatWindow = ({
         (className ?? "")
       }
     >
-      <MacWindowHeader title={title} messages={messages} />
+      <MacWindowHeader title={title} messages={messages} onSave={onSave} />
       <div
-        className="window-heights mb-2 mr-2"
+        className={clsx(
+          "mb-2 mr-2 ",
+          (fullscreen && "max-h-[75vh] flex-grow overflow-auto") ||
+            "window-heights"
+        )}
         ref={scrollRef}
         onScroll={handleScroll}
         id={messageListId}
@@ -117,6 +127,7 @@ const ChatWindow = ({
 interface HeaderProps {
   title?: string | ReactNode;
   messages: Message[];
+  onSave?: (format: string) => void;
 }
 
 const MacWindowHeader = (props: HeaderProps) => {
@@ -151,11 +162,48 @@ const MacWindowHeader = (props: HeaderProps) => {
     }
 
     const text = element.innerText;
-    void navigator.clipboard.writeText(text);
+
+    if (navigator.clipboard) {
+      void navigator.clipboard.writeText(text);
+    } else {
+      // Fallback to a different method for unsupported browsers
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        document.execCommand("copy");
+        console.log("Text copied to clipboard");
+      } catch (err) {
+        console.error("Unable to copy text to clipboard", err);
+      }
+
+      document.body.removeChild(textArea);
+    }
   };
 
+  const exportOptions = [
+    <WindowButton
+      key="Image"
+      delay={0.1}
+      onClick={(): void => saveElementAsImage(messageListId)}
+      icon={<FaImage size={12} />}
+      name="Image"
+    />,
+    <WindowButton
+      key="Copy"
+      delay={0.15}
+      onClick={(): void => copyElementText(messageListId)}
+      icon={<FaClipboard size={12} />}
+      name="Copy"
+    />,
+    <PDFButton key="PDF" name="PDF" messages={props.messages} />,
+  ];
+
   return (
-    <div className="flex items-center gap-1 overflow-hidden rounded-t-3xl p-3">
+    <div className="flex items-center gap-1 overflow-visible rounded-t-3xl p-3">
       <PopIn delay={0.4}>
         <div className="h-3 w-3 rounded-full bg-red-500" />
       </PopIn>
@@ -165,23 +213,34 @@ const MacWindowHeader = (props: HeaderProps) => {
       <PopIn delay={0.6}>
         <div className="h-3 w-3 rounded-full bg-green-500" />
       </PopIn>
-      <div className="flex flex-grow font-mono text-sm font-bold text-gray-600 sm:ml-2">
+      <Expand
+        delay={1}
+        className="invisible flex flex-grow font-mono text-sm font-bold text-gray-600 sm:ml-2 md:visible"
+      >
         {props.title}
-      </div>
-      <WindowButton
-        delay={0.7}
-        onClick={(): void => saveElementAsImage(messageListId)}
-        icon={<FaImage size={12} />}
-        text={"Image"}
+      </Expand>
+      {props.onSave && (
+        <WindowButton
+          key="Agent"
+          delay={0}
+          onClick={() => props.onSave?.("db")}
+          icon={<FaSave size={12} />}
+          name={"Save"}
+          styleClass={{
+            container: `relative bg-[#3a3a3a] md:w-20 text-center font-mono rounded-lg text-gray/50 border-[2px] border-white/30 font-bold transition-all sm:py-0.5 hover:border-[#1E88E5]/40 hover:bg-[#6b6b6b] focus-visible:outline-none focus:border-[#1E88E5]`,
+          }}
+        />
+      )}
+      <Menu
+        name="Export"
+        onChange={() => null}
+        items={exportOptions}
+        styleClass={{
+          container: "relative",
+          input: `bg-[#3a3a3a] w-28 animation-duration text-left px-4 text-sm p-1 font-mono rounded-lg text-gray/50 border-[2px] border-white/30 font-bold transition-all sm:py-0.5 hover:border-[#1E88E5]/40 hover:bg-[#6b6b6b] focus-visible:outline-none focus:border-[#1E88E5]`,
+          option: "w-full py-[1px] md:py-0.5",
+        }}
       />
-
-      <WindowButton
-        delay={0.8}
-        onClick={(): void => copyElementText(messageListId)}
-        icon={<FaClipboard size={12} />}
-        text={"Copy"}
-      />
-      <PDFButton messages={props.messages} />
     </div>
   );
 };
@@ -309,12 +368,6 @@ const getMessagePrefix = (message: Message) => {
       return message.info ? message.info : "Executing:";
   }
 };
-
-export interface Message {
-  type: "goal" | "thinking" | "task" | "action" | "system";
-  info?: string;
-  value: string;
-}
 
 export default ChatWindow;
 export { ChatMessage };
