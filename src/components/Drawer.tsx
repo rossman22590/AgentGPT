@@ -5,6 +5,7 @@ import {
   FaCog,
   FaDiscord,
   FaGithub,
+  FaHeart,
   FaQuestionCircle,
   FaRobot,
   FaRocket,
@@ -79,6 +80,11 @@ const Drawer = ({
     setShowDrawer((prevState) => !prevState);
   };
 
+  const handleSupport = () => {
+    const donationUrl = "https://github.com/sponsors/reworkd-admin";
+    window.open(donationUrl, "_blank");
+  };
+
   const userAgents = query.data ?? [];
 
   return (
@@ -93,11 +99,13 @@ const Drawer = ({
       >
         <div className="flex flex-col gap-1 overflow-hidden">
           <div className="mb-2 flex justify-center gap-2">
-            My Agent(s)
+            <p className="font-bold">My Agents</p>
             <button
               className={clsx(
-                showDrawer ? "-translate-x-2" : "translate-x-12",
-                "absolute right-0 top-2 z-40 rounded-md border-2 border-white/20 bg-zinc-900 p-2  text-white transition-all hover:bg-zinc-700 "
+                showDrawer
+                  ? "-translate-x-2"
+                  : "translate-x-12 border-2 border-white/20",
+                "absolute right-0 top-2 z-40 rounded-md bg-zinc-900 p-2 text-white transition-all hover:bg-zinc-700 "
               )}
               onClick={toggleDrawer}
             >
@@ -119,9 +127,15 @@ const Drawer = ({
 
             {status === "unauthenticated" && (
               <div>
-                {t(
-                  "Sign in to be able to save agents and manage your account!"
-                )}
+                <a
+                  className="link"
+                  onClick={() => {
+                    signIn();
+                  }}
+                >
+                  Sign in
+                </a>{" "}
+                {t("to be able to save agents and manage your account!")}
               </div>
             )}
             {status === "authenticated" && userAgents.length === 0 && (
@@ -151,6 +165,11 @@ const Drawer = ({
             icon={<FaQuestionCircle />}
             text={t("Help")}
             onClick={showHelp}
+          />
+          <DrawerItem
+            icon={<FaHeart />}
+            text="Support"
+            onClick={handleSupport}
           />
           <DrawerItem icon={<FaCog />} text="Settings" onClick={showSettings} />
           <DrawerItem
@@ -220,7 +239,7 @@ const AuthItem: React.FC<{
   signOut: () => void;
 }> = ({ signIn, signOut, session }) => {
   const [t] = useTranslation();
-  const icon = session?.user ? <FaSignInAlt /> : <FaSignOutAlt />;
+  const icon = session?.user ? <FaSignOutAlt /> : <FaSignInAlt />;
   const text = session?.user ? t("Sign Out") : t("Sign In");
   const onClick = session?.user ? signOut : signIn;
 
