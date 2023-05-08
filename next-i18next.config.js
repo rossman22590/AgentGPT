@@ -20,6 +20,7 @@ module.exports = {
       "nl",
       "sk",
       "hr",
+      "tr",
     ],
   },
   localePath: typeof window === "undefined" ? "./public/locales" : "/locales",
@@ -36,6 +37,7 @@ module.exports = {
     "languages",
     "drawer",
     "indexPage",
+    "sorryDialog",
   ],
   react: {
     useSuspense: false,
