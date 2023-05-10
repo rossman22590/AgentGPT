@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/reworkd/AgentGPT/main/public/banner.png?token=GHSAT0AAAAAAB7JND3U3VGGF3UYYHGYO4RAZBSDJAQ" height="300"/>
+  <img src="https://raw.githubusercontent.com/reworkd/AgentGPT/main/next/public/banner.png" height="300"/>
 </p>
 <p align="center">
   <em>🤖 Assemble, configure, and deploy autonomous AI Agents in your browser. 🤖 </em>
 </p>
 <p align="center">
-    <img alt="Node version" src="https://img.shields.io/static/v1?label=node&message=%20%3E=16.0.0&logo=node.js&color=2334D058" />
+    <img alt="Node version" src="https://img.shields.io/static/v1?label=node&message=%20%3E=18&logo=node.js&color=2334D058" />
       <a href="https://github.com/reworkd/AgentGPT/blob/master/README.md"><img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English"></a>
   <a href="https://github.com/reworkd/AgentGPT/blob/master/docs/README.zh-HANS.md"><img src="https://img.shields.io/badge/lang-简体中文-red.svg" alt="简体中文"></a>
   <a href="https://github.com/reworkd/AgentGPT/blob/master/docs/README.hu-Cs4K1Sr4C.md"><img src="https://img.shields.io/badge/lang-Hungarian-red.svg" alt="Hungarian"></a>
@@ -14,7 +14,9 @@
 <p align="center">
 <a href="https://agentgpt.reworkd.ai">🔗 Short link</a> 
 <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-<a href="#-getting-started">🤝 Contribute</a>
+<a href="https://docs.reworkd.ai/">📚 Docs</a>
+<span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+<a href="https://docs.reworkd.ai/contributing">🤝 Contribute</a>
 <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
 <a href="https://twitter.com/asimdotshrestha/status/1644883727707959296">🐦 Twitter</a>
 <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
@@ -73,7 +75,7 @@ More Coming soon...
 - ✅ **Framework**: [Nextjs 13 + Typescript](https://nextjs.org/).
 - ✅ **Auth**: [Next-Auth.js](https://next-auth.js.org)
 - ✅ **ORM**: [Prisma](https://prisma.io).
-- ✅ **Database**: [Supabase](https://supabase.com/).
+- ✅ **Database**: [Planetscale](https://planetscale.com/).
 - ✅ **Styling**: [TailwindCSS + HeadlessUI](https://tailwindcss.com).
 - ✅ **Typescript Schema Validation**: [Zod](https://github.com/colinhacks/zod).
 - ✅ **End-to-end typesafe API**: [tRPC](https://trpc.io/).
@@ -109,7 +111,6 @@ use the provided setup script.
 ### 🛠️ Manual Setup
 
 > 🚧 You will need [Nodejs +18 (LTS recommended)](https://nodejs.org/en/) installed.
-
 1. Fork this project:
 
 - [Click here](https://github.com/reworkd/AgentGPT/fork).
@@ -130,17 +131,14 @@ npm install
 4. Create a **.env** file with the following content:
 
 > 🚧 The environment variables must match the following [schema](https://github.com/reworkd/AgentGPT/blob/main/src/env/schema.mjs).
-
 ```bash
 # Deployment Environment:
 NODE_ENV=development
-
 # Next Auth config:
 # Generate a secret with `openssl rand -base64 32`
 NEXTAUTH_SECRET=changeme
 NEXTAUTH_URL=http://localhost:3000
 DATABASE_URL=file:./db.sqlite
-
 # Your open api key
 OPENAI_API_KEY=changeme
 ```
