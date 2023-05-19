@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/reworkd/AgentGPT/main/next/public/banner.png" height="300"/>
 </p>
-<p align="center">
+<p align="center"> 
   <em>🤖 Assemble, configure, and deploy autonomous AI Agent(s) in your browser. 🤖 </em>
 </p>
 <p align="center">
