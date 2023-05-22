@@ -26,7 +26,7 @@
 ---
 
 <h2 align="center">
-💝 Support the Advancement of AgentGPT!! 💝
+💝 Support the Advancement of AgentGPT!! 💝 
 </h2>
 
 <p align="center">
