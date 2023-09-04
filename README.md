@@ -14,7 +14,7 @@
 <p align="center">
 <a href="https://agentgpt.reworkd.ai">🔗 Short link</a>
 <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-<a href="https://docs.reworkd.ai/">📚 Docs</a>
+<a href="https://docs.reworkd.ai/">📚 Docs</a> 
 <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
 <a href="https://docs.reworkd.ai/essentials/contributing">🤝 Contribute</a>
 <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
