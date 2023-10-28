@@ -6,7 +6,7 @@ ARG NODE_ENV
 ENV NODE_ENV=$NODE_ENV
 
 # Needed for the wait-for-db script
-RUN apk add --no-cache netcat-openbsd
+RUN apk add --no-cache netcat-openbsd 
 
 # Set the working directory
 WORKDIR /next
